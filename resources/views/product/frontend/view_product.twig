@@ -1,0 +1,63 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">{{ product.name }}</h1>
+<div class="col-xs-12 col-md-6">
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+    <li data-target="#myCarousel" data-slide-to="1"></li>
+    <li data-target="#myCarousel" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+      <img class="first-slide" src="/assets/image/{{ product.photo_1 }}" alt="First slide">
+    </div>
+    <div class="item">
+      <img class="second-slide" src="/assets/image/{{ product.photo_2 }}" alt="Second slide">
+    </div>
+    <div class="item">
+      <img class="third-slide" src="/assets/image/{{ product.photo_3 }}" alt="Third slide">
+    </div>
+  </div>
+  <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+{{ product.detail | raw }}
+</div>
+<div class="col-xs-12 col-md-6">
+<p>ID: {{ product.id }}</p>
+<p>Stock: {{ product.stock }}</p>
+<p>Price: RM{{ product.price }}</p>
+<p>Discount: {{ product.discount }}%</p>
+<p>Colour: {{ product.colour }}</p>
+<p>Size: {{ product.size }}</p>
+<p>Weight: {{ product.weight }}g</p>
+<p>Category: {{ product.category }}</p>
+<p>Brand: {{ product.brand }}</p>
+<form action="{{ path_for('wishlist.add') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ product.id }}">
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to add to wishlist ?')" class="btn btn-info">Add Wishlist</button>
+</form>
+<form action="{{ path_for('checkout.add') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ product.id }}">
+<div class="form-group{{ errors.amount ? ' has-error' : '' }}">
+<label for="amount">Amount</label>
+<input type="text" name="amount" id="amount" placeholder="" value="{{ old.amount }}" class="form-control">
+{% if errors.amount %}
+<span class="help-block">{{ errors.amount | first }}</span>
+{% endif %}
+</div>
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to add to checkout ?')" class="btn btn-success">Add Checkout</button>
+</form>
+</div>
+</div>
+{% endblock %}

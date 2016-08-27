@@ -1,0 +1,72 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Product</h1>
+
+<form action="{{ path_for('frontend.search.product') }}" method="get" class="form-inline">
+<div class="form-group">
+<label for="name">Keyword</label>
+<input type="text" name="keyword" id="keyword" value="{{ _get['keyword'] ? _get['keyword'] : ''}}" placeholder="Search keyword" class="form-control">
+</div>
+<div class="form-group">
+<label for="stock">Brand</label>
+<select name="brand" id="brand" class="form-control">
+<option value="">All brand</option>
+{% for value in brands %}
+<option value="{{ value.slug }}" {{ _get['brand'] == value.slug ? 'selected' : ''}}>{{ value.name }}</option>
+{% endfor %}
+</select>
+</div>
+<div class="form-group">
+<label for="category">Category</label>
+<select name="category" id="category" class="form-control">
+<option value="">All category</option>
+{% for value in categories %}
+<option value="{{ value.slug }}" {{ _get['category'] == value.slug ? 'selected' : ''}}>{{ value.name }}</option>
+{% endfor %}
+</select>
+</div>
+<div class="form-group">
+<label for="order_by">Order By</label>
+<select name="order_by" id="order_by" class="form-control">
+<option value="name" {{ (_get['order_by'] == "name") or (_get['order_by'] == null) ? 'selected' : ''}}>Name</option>
+<option value="stock" {{ _get['order_by'] == "stock" ? 'selected' : ''}}>Stock</option>
+<option value="price" {{ _get['order_by'] == "price" ? 'selected' : ''}}>Price</option>
+<option value="discount" {{ _get['order_by'] == "discount" ? 'selected' : ''}}>Discount</option>
+<option value="created_at" {{ _get['order_by'] == "created_at" ? 'selected' : ''}}>Created At</option>
+<option value="updated_at" {{ _get['order_by'] == "updated_at" ? 'selected' : ''}}>Updated At</option>
+</select>
+</div>
+<div class="form-group">
+<label for="ordering">Ordering</label>
+<select name="ordering" id="ordering" class="form-control">
+<option value="asc" {{ (_get['ordering'] == "asc") or (_get['orrdering'] == null) ? 'selected' : ''}}>Asc</option>
+<option value="desc" {{ _get['ordering'] == "desc" ? 'selected' : ''}}>Desc</option>
+</select>
+</div>
+<button type="submit" class="btn btn-warning">Search</button>
+</form>
+<hr>
+
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>Name</td><td>Stock</td><td>Price</td><td>Discount</td><td>Weight</td><td>Category</td><td>Brand</td></tr></thead>
+<tbody>
+{% for value in products %}
+<tr>
+<td><a href="{{ path_for('frontend.view.product')~'?id='~value.id }}">{{ value.id }}</a></td>
+<td>{{ value.name }}</td>
+<td>{{ value.stock }}</td>
+<td>RM{{ value.price }}</td>
+<td>{{ value.discount }}%</td>
+<td>{{ value.weight }}g</td>
+<td>{{ value.category }}</td>
+<td>{{ value.brand }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{{products.render()|raw}}
+</div>
+{% endblock %}

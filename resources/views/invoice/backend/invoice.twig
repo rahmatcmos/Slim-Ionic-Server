@@ -1,0 +1,42 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Manage Invoice</h1>
+
+<form action="{{ path_for('dashboard.search.invoice') }}" method="get" class="form-inline">
+<div class="form-group">
+<label for="name">Keyword</label>
+<input type="text" name="keyword" id="keyword" value="" placeholder="Search keyword" class="form-control">
+</div>
+<button type="submit" class="btn btn-warning">Search</button>
+</form>
+<hr>
+<p>STATUS :: [0-UNPAID] [1-PAID] [2-SHIP OUT] [3-COLLECTED]</p>
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>Method</td><td>Total Amount</td><td>Total Price</td><td>Total Weight</td><td>Status</td><td>Created At</td><td>Delete</td></tr></thead>
+<tbody>
+{% for value in invoices %}
+<tr>
+<td><a href="{{ path_for('dashboard.view.invoice')~'?id='~value.id }}">{{ value.id }}</a></td>
+<td>{{ value.shipping == 'selfpickup' ? 'Self-Collect' : 'Poslaju' }}</td>
+<td>{{ value.total_amount }}</td>
+<td>RM{{ value.total_price }}</td>
+<td>{{ value.total_weight }}g</td>
+<td>{{ value.status }}</td>
+<td>{{ value.created_at }}</td>
+<td>
+<form action="{{ path_for('dashboard.delete.invoice') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.id }}">
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to remove {{ value.id }} ?')" class="btn btn-danger"{{ value.status == 0 ? '' : ' disabled' }}>Delete</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{{invoices.render()|raw}}
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Manage Brand</h1>
+<form action="{{ path_for('dashboard.add.brand') }}" method="post" class="form-inline">
+<div class="form-group{{ errors.brand_name ? ' has-error' : '' }}">
+<label for="name">Name</label>
+<input type="text" name="brand_name" id="brand_name" value="{{ old.brand_name }}" placeholder="Name" class="form-control">
+</div>
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to add brand ?')" class="btn btn-success">Add</button>
+</form>
+{% if errors.brand_name %}
+<span class="help-block">{{ errors.brand_name | first }}</span>
+{% endif %}
+<hr>
+{% if errors.new_brand_name %}
+<div class="alert alert-danger alert-dismissible">
+<button type="button" class="close" data-dismiss="alert">
+<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+</button>
+{{ errors.new_brand_name | first }}
+</div>
+{% endif %}
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>Name</td><td>Slug</td><td>Edit</td></tr></thead>
+<tbody>
+{% for value in brands %}
+<tr>
+<td>{{ value.id }}</td>
+<td>{{ value.name }}</td>
+<td>{{ value.slug }}</td>
+<td>
+<form action="{{ path_for('dashboard.update.brand') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.id }}">
+<div class="form-group">
+<input type="text" name="new_brand_name" id="new_brand_name" value="" placeholder="New brand name" class="form-control">
+</div>
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to update {{ value.name }} ?')" class="btn btn-info">Update</button>
+</form>
+<form action="{{ path_for('dashboard.delete.brand') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.id }}">
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to delete {{ value.name }} ?')" class="btn btn-danger">Delete</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{{brands.render()|raw}}
+</div>
+{% endblock %}

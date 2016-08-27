@@ -1,0 +1,44 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Manage Product</h1>
+
+<form action="{{ path_for('dashboard.search.product') }}" method="get" class="form-inline">
+<div class="form-group">
+<label for="name">Keyword</label>
+<input type="text" name="keyword" id="keyword" value="" placeholder="Search keyword" class="form-control">
+</div>
+<button type="submit" class="btn btn-warning">Search</button>
+<a class="btn btn-success" href="{{ path_for('dashboard.add.product')}}">Add Product</a>
+</form>
+<hr>
+
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>Name</td><td>Stock</td><td>Price</td><td>Discount</td><td>Weight</td><td>Category</td><td>Brand</td><td>Delete</td></tr></thead>
+<tbody>
+{% for value in products %}
+<tr>
+<td><a href="{{ path_for('dashboard.update.product')~'?id='~value.id }}">{{ value.id }}</a></td>
+<td>{{ value.name }}</td>
+<td>{{ value.stock }}</td>
+<td>RM{{ value.price }}</td>
+<td>{{ value.discount }}%</td>
+<td>{{ value.weight }}g</td>
+<td>{{ value.category }}</td>
+<td>{{ value.brand }}</td>
+<td>
+<form action="{{ path_for('dashboard.delete.product') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.id }}">
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to delete {{ value.name }} ?')" class="btn btn-danger">Delete</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{{products.render()|raw}}
+</div>
+{% endblock %}

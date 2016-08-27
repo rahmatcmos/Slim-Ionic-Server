@@ -1,0 +1,28 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Wishlist</h1>
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>Name</td><td>Stock</td><td>Price</td><td>Delete</td></tr></thead>
+<tbody>
+{% for value in wishlists %}
+<tr>
+<td><a href="{{ path_for('frontend.view.product')~'?id='~value.id }}">{{ value.id }}</a></td>
+<td>{{ value.name }}</td>
+<td>{{ value.stock }}</td>
+<td>RM{{ value.price }}</td>
+<td>
+<form action="{{ path_for('wishlist.delete') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.wid }}">
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to remove {{ value.id }} ?')" class="btn btn-danger">Delete</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+{% endblock %}

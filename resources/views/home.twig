@@ -1,0 +1,16 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+    <div id="containter">
+        <h1 class="text-center">{{ config.app_name }}</h1>
+        <b class="text-center">
+            <p>{{info.self_address}},</p>
+            <p>{{info.self_poscode}}, {{info.self_city}},</p>
+            <p>{{info.self_state}}</p>
+            <p>Email: {{info.self_email}}</p>
+            <p>Fax: {{info.self_fax}}</p>
+            <p>Phone: {{info.self_phone}}</p>
+        </b>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Checkout</h1>
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>Product</td><td>Amount</td><td>Discount</td><td>Price</td><td>Colour</td><td>Size</td><td>Weight</td><td>Delete</td></tr></thead>
+<tbody>
+{% for value in checkouts %}
+<tr>
+<td>{{ value.id }}</td>
+<td><a href="{{ path_for('frontend.view.product')~'?id='~value.product }}">{{ value.name }}</a></td>
+<td>{{ value.amount }}</td>
+<td>{{ value.discount }}%</td>
+<td>RM{{ value.price }}</td>
+<td>{{ value.colour }}</td>
+<td>{{ value.size }}</td>
+<td>{{ value.weight }}</td>
+<td>
+<form action="{{ path_for('checkout.delete') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.id }}">
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to remove {{ value.id }} ?')" class="btn btn-danger">Delete</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% if(checkouts|length > 0)%}
+<h3 class="text-center">Generate Invoice</h3>
+<form action="{{ path_for('frontend.invoice.generate') }}" method="post">
+<div class="row">
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.billing ? ' has-error' : '' }}">
+    
+<label for="billing">Billing</label>
+<input type="text" name="billing" id="billing" class="form-control" value="{{ old.billing }}">
+{% if errors.billing %}
+<span class="help-block">{{ errors.billing | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.mobile ? ' has-error' : '' }}">
+<label for="mobile">Mobile</label>
+<input type="text" name="mobile" id="mobile" class="form-control" value="{{ old.mobile }}">
+{% if errors.mobile %}
+<span class="help-block">{{ errors.mobile | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.recipient ? ' has-error' : '' }}">
+<label for="recipient">Recipient</label>
+<input type="text" name="recipient" id="recipient" class="form-control" value="{{ old.recipient }}">
+{% if errors.recipient %}
+<span class="help-block">{{ errors.recipient | first }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-12">
+<div class="form-group{{ errors.first_address ? ' has-error' : '' }}">
+<label for="first_address">First Address</label>
+<input type="text" name="first_address" id="first_address" class="form-control" value="{{ old.first_address }}">
+{% if errors.first_address %}
+<span class="help-block">{{ errors.first_address | first }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-12">
+<div class="form-group{{ errors.second_address ? ' has-error' : '' }}">
+<label for="second_address">Second Address</label>
+<input type="text" name="second_address" id="second_address" class="form-control" value="{{ old.second_address }}">
+{% if errors.second_address %}
+<span class="help-block">{{ errors.second_address | first }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.poscode ? ' has-error' : '' }}">
+<label for="poscode">Poscode</label>
+<input type="text" name="poscode" id="poscode" class="form-control" value="{{ old.poscode }}">
+{% if errors.poscode %}
+<span class="help-block">{{ errors.poscode | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.city ? ' has-error' : '' }}">
+<label for="city">City</label>
+<input type="text" name="city" id="city" class="form-control" value="{{ old.city }}">
+{% if errors.city %}
+<span class="help-block">{{ errors.city | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.state ? ' has-error' : '' }}">
+<label for="state">State</label>
+<select id="state" name="state" class="form-control">
+<option value="" {{ old.state ?: "selected" }}>Please choose state</option>
+{% for value in company_info.zone_1 %}
+<option value="{{ value }}" {{ value==old.state ? "selected" : '' }}>{{ value }}</option>
+{% endfor %}
+{% for value in company_info.zone_2 %}
+<option value="{{ value }}" {{ value==old.state ? "selected" : '' }}>{{ value }}</option>
+{% endfor %}
+{% for value in company_info.zone_3 %}
+<option value="{{ value }}" {{ value==old.state ? "selected" : '' }}>{{ value }}</option>
+{% endfor %}
+</select>
+{% if errors.state %}
+<span class="help-block">{{ errors.state | first }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="checkbox">
+<label><input id="selfpickup" type="checkbox" name="selfpickup" {{ old.selfpickup ? "checked" : '' }}> Self-Collect (Required Billing & Mobile field only)</label>
+</div>
+
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to generate invoices ?')" class="btn btn-warning">Generate Invoice</button>
+</form>
+{% endif %}
+</div>
+{% endblock %}

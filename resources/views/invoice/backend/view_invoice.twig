@@ -1,0 +1,96 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">{{ invoice.id }}</h1>
+<div class="row">
+<div class="col-xs-12 col-md-4">
+<h4>{{ company_info.self_name }}</h4>
+<p>{{ company_info.self_address }}</p>
+<p>{{ company_info.self_poscode }}, {{ company_info.self_city }},</p>
+<p>{{ company_info.self_state }}</p>
+<p>Phone: {{ company_info.self_phone }}</p>
+<p>Fax: {{ company_info.self_fax }}</p>
+<p>Email: {{ company_info.self_email }}</p>
+</div>
+<div class="col-xs-12 col-md-4">
+<h4>Invoice</h4>
+<p>Customer ID: {{ invoice.user }}</p>
+<p>Billing: {{ invoice.billing }}</p>
+<p>Contact No: {{ invoice.mobile }}</p>
+<p>Invoice ID: {{ invoice.id }}</p>
+<p>Status: {{ invoice.status }}</p>
+<p>Date: {{ invoice.created_at }}</p>
+</div>
+<div class="col-xs-12 col-md-4">
+<h4 class="text-right">Shipping</h4>
+{% if(shipping_record == null) %}
+<p class="text-right">Self-Collect: {{ invoice.collector }}</p>
+{% else %}
+<p class="text-right">{{ shipping_record.recipient }}</p>
+<p class="text-right">{{ shipping_record.first_address }}</p>
+<p class="text-right">{{ shipping_record.second_address }}</p>
+<p class="text-right">{{ shipping_record.poscode }}, {{ shipping_record.city }}</p>
+<p class="text-right">{{ shipping_record.state }}</p>
+<p class="text-right">Serial: {% if shipping_record.serial != null %}<a href="http://poslaju.com.my/track-trace/#trackingIds={{ shipping_record.serial }}" target="_blank">{{ shipping_record.serial }}</a>{% else %}-{% endif %}</p>
+<p class="text-right">Cost: RM{{ shipping_record.cost }}</p>
+{% endif %}
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<h4 class="text-center">Shipping & Billing</h4>
+<p>STATUS :: [0-UNPAID] [1-PAID] [2-SHIP OUT] [3-COLLECTED]</p>
+{% if errors.serial %}
+<span class="text-danger">{{ errors.serial | first }}</span>
+{% endif %}
+<form class="form-inline" action="{{ path_for('dashboard.update.invoice') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ invoice.id }}">
+<input type="hidden" name="shipping" id="shipping" value="{{ shipping_record.id }}">
+<div class="form-group">
+<label for="status">Status</label>
+<select id="status" name="status" class="form-control">
+<option value="0" {{ (old.status ? old.status : invoice.status) == 0  ? 'selected' : ''}}>UNPAID</option>
+<option value="1" {{ (old.status ? old.status : invoice.status) == 1  ? 'selected' : ''}}>PAID</option>
+<option value="2" {{ (old.status ? old.status : invoice.status) == 2  ? 'selected' : ''}}>SHIP OUT</option>
+<option value="3" {{ (old.status ? old.status : invoice.status) == 3  ? 'selected' : ''}}>COLLECTED</option>
+</select>
+</div>
+<div class="form-group{{ errors.serial ? ' has-error' : '' }}">
+<label for="serial">Serial</label>
+<input type="text" name="serial" id="serial" placeholder="Poslaju ID:2 / Collector IC:3" value="{{ old.serial }}" class="form-control">
+</div>
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to add to process ?')" class="btn btn-info">Process</button>
+</form>
+</div>
+</div>
+<h4 class="text-center">Product</h4>
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>Amount</td><td>Discount</td><td>Price</td><td>Colour</td><td>Size</td><td>Weight</td></tr></thead>
+<tbody>
+{% for value in checkout_products %}
+<tr>
+<td><a href="{{ path_for('frontend.view.product')~'?id='~value.product }}">{{ value.product }}</a></td>
+<td>{{ value.amount }}</td>
+<td>{{ value.discount }}%</td>
+<td>RM{{ value.price }}</td>
+<td>{{ value.colour }}</td>
+<td>{{ value.size }}</td>
+<td>{{ value.weight }}g</td>
+</tr>
+{% endfor %}
+<tr>
+<td class="text-right">Total Amount</td>
+<td>{{ invoice.total_amount }}</td>
+<td class="text-right">Total Payment</td>
+<td><b>RM{{ invoice.total_price }} {{ shipping_record.cost ? '(Included Shipping Cost)' : '' }}</b></td>
+<td></td>
+<td class="text-right">Total Weight</td>
+<td>{{ invoice.total_weight }}g</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Manage User</h1>
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>ID</td><td>User</td><td>Email</td><td>Role/Status</td><td>Created/Delete</td></tr></thead>
+<tbody>
+{% for value in users %}
+<tr>
+<td>{{ value.id }}</td>
+<td>{{ value.name }}</td>
+<td>{{ value.email }}</td>
+<td>
+<form action="{{ path_for('dashboard.update.user') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.id }}">
+<div class="form-group">
+<select id="role" name="role" class="form-control">
+<option value="ADMIN" {{ value.role=="ADMIN" ? "selected" : '' }}>ADMIN</option>
+<option value="MEMBER" {{ value.role=="MEMBER" ? "selected" : '' }}>MEMBER</option>
+</select>
+</div>
+<div class="form-group">
+<select id="status" name="status" class="form-control">
+<option value="ACTIVE" {{ value.status=="ACTIVE" ? "selected" : '' }}>ACTIVE</option>
+<option value="INACTIVE" {{ value.status=="INACTIVE" ? "selected" : '' }}>INACTIVE</option>
+<option value="BAN" {{ value.status=="BAN" ? "selected" : '' }}>BAN</option>
+</select>
+</div>
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to update {{ value.name }} ?')" class="btn btn-info">Update</button>
+</form>
+</td>
+<td>{{ value.created_at }}
+<form action="{{ path_for('dashboard.delete.user') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ value.id }}">
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to delete {{ value.name }} ?')" class="btn btn-danger">Delete</button>
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{{users.render()|raw}}
+</div>
+{% endblock %}

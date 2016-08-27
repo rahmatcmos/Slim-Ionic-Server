@@ -1,0 +1,45 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+<div class="container">
+<div class="navbar-header">
+<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+<span class="sr-only">Toggle navigation</span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+<span class="icon-bar"></span>
+</button>
+<a class="navbar-brand" href="{{ path_for('home') }}">{{ config.app_name }}</a>
+</div>
+<div id="navbar" class="navbar-collapse collapse">
+<ul class="nav navbar-nav navbar-right">
+<li><a href="{{ path_for('frontend.list.product') }}">Product</a></li>
+{% if auth.check %}
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ auth.user.name }} <span class="caret"></span></a>
+<ul class="dropdown-menu">
+{% if auth.user.role=="ADMIN" %}
+<li class="dropdown-header">Dashboard</li>
+<li><a href="{{ path_for('dashboard.manage.user') }}">Manage User</a></li>
+<li><a href="{{ path_for('dashboard.manage.product') }}">Manage Product</a></li>
+<li><a href="{{ path_for('dashboard.manage.category') }}">Manage Category</a></li>
+<li><a href="{{ path_for('dashboard.manage.brand') }}">Manage Brand</a></li>
+<li><a href="{{ path_for('dashboard.manage.invoice') }}">Manage Invoice</a></li>
+<li role="separator" class="divider"></li>
+{% endif %}
+<li class="dropdown-header">Account Settings</li>
+<li><a href="{{ path_for('wishlist.index') }}">Wishlist {{ auth.totalWishlist != 0 ? auth.totalWishlist : ''}}</a></li>
+<li><a href="{{ path_for('checkout.index') }}">Checkout</a></li>
+<li><a href="{{ path_for('frontend.invoice.index') }}">Invoice</a></li>
+<li><a href="{{ path_for('jwt.index') }}">Manage JWT</a></li>
+<li><a href="{{ path_for('auth.password.change') }}">Change Password</a></li>
+<li><a href="{{ path_for('auth.signout') }}">Sign Out</a></li>
+</ul>
+</li>
+{% else %}
+<li><a href="{{ path_for('auth.signin') }}">Sign In</a></li>
+<li><a href="{{ path_for('auth.signup') }}">Sign Up</a></li>
+<li><a href="{{ path_for('auth.reset') }}">Reset Password</a></li>
+{% endif %}
+</ul>
+</div>
+</div>
+</nav>

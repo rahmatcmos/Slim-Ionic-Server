@@ -1,0 +1,31 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Manage JWT</h1>
+<div class="table-responsive">
+<table class="table table-bordered">
+<thead><tr><td>Jti</td><td>IP</td><td>Aud</td><td>Os</td><td>Exp</td><td>Issued</td><td>Updated</td><td>Delete</td></tr></thead>
+<tbody>
+{% for value in jwts %}
+<tr>
+<td>{{ value.id }}</td>
+<td>{{ value.ip_address }}</td>
+<td>{{ value.audience }}</td>
+<td>{{ value.os }}</td>
+<td>{{ value.expired_at }}</td>
+<td>{{ value.created_at }}</td>
+<td>{{ value.updated_at }}</td>
+<td>
+<form action="{{ path_for('jwt.delete') }}" method="post">
+<input type="hidden" name="jti" id="jti" value="{{ value.id }}">
+<button type="submit" onClick="return confirm('Are you sure to delete ?')" class="btn btn-danger">Delete</button>
+{{ csrf.field | raw }}
+</form>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+{% endblock %}

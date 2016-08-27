@@ -1,0 +1,18 @@
+body {
+	padding-top: 80px;
+	padding-bottom: 40px;
+}
+
+#containter {
+	height: 400px;
+	display: flex;
+	flex-direction: column;
+	align-items: center; 
+	justify-content: center;
+}
+
+.content {
+	margin: 0 auto;
+	max-width: 100%;
+}
+

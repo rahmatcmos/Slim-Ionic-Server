@@ -1,0 +1,162 @@
+{% extends 'templates/app.twig' %}
+{% block content %}
+<div class="content">
+<h1 class="text-center">Update Product::{{ product.name }}</h1>
+<form enctype="multipart/form-data" action="{{ path_for('dashboard.update.product') }}" method="post">
+<input type="hidden" name="id" id="id" value="{{ product.id }}">
+<input type="hidden" name="photo_1" id="photo_1" value="{{ product.photo_1 }}">
+<input type="hidden" name="photo_2" id="photo_2" value="{{ product.photo_2 }}">
+<input type="hidden" name="photo_3" id="photo_3" value="{{ product.photo_3 }}">
+<div class="row">
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.name ? ' has-error' : '' }}">
+<label for="name">Name</label>
+<input type="text" name="name" id="name" placeholder="" value="{{ old.name ? old.name : product.name }}" class="form-control">
+{% if errors.name %}
+<span class="help-block">{{ errors.name | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.stock ? ' has-error' : '' }}">
+<label for="stock">Stock</label>
+<input type="text" name="stock" id="stock" placeholder="" value="{{ old.stock ? old.stock : product.stock }}" class="form-control">
+{% if errors.stock %}
+<span class="help-block">{{ errors.stock | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.price ? ' has-error' : '' }}">
+<label for="price">Price(RM)</label>
+<input type="text" name="price" id="price" placeholder="" value="{{ old.price ? old.price : product.price }}" class="form-control">
+{% if errors.price %}
+<span class="help-block">{{ errors.price | first }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.discount ? ' has-error' : '' }}">
+<label for="discount">Discount(%, optional)</label>
+<input type="text" name="discount" id="discount" placeholder="" value="{{ old.discount ? old.discount : product.discount }}" class="form-control">
+{% if errors.discount %}
+<span class="help-block">{{ errors.discount | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.colour ? ' has-error' : '' }}">
+<label for="colour">Colour(optional)</label>
+<input type="text" name="colour" id="colour" placeholder="" value="{{ old.colour ? old.colour : product.colour }}" class="form-control">
+{% if errors.colour %}
+<span class="help-block">{{ errors.colour | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.size ? ' has-error' : '' }}">
+<label for="size">Size(optional)</label>
+<input type="text" name="size" id="size" placeholder="" value="{{ old.size ? old.size : product.size }}" class="form-control">
+{% if errors.size %}
+<span class="help-block">{{ errors.size | first }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.weight ? ' has-error' : '' }}">
+<label for="weight">Weight(g)</label>
+<input type="text" name="weight" id="weight" placeholder="" value="{{ old.weight ? old.weight : product.weight }}" class="form-control">
+{% if errors.weight %}
+<span class="help-block">{{ errors.weight | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.category ? ' has-error' : '' }}">
+<label for="category">Category</label>
+<select name="category" id="category" class="form-control">
+<option value="">Please select category</option>
+{% for value in categories %}
+<option value="{{ value.id }}" {{ (old.category ? old.category : product.category) == value.id  ? 'selected' : ''}}>{{ value.name }}</option>
+{% endfor %}
+</select>
+{% if errors.category %}
+<span class="help-block">{{ errors.category | first }}</span>
+{% endif %}
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="form-group{{ errors.brand ? ' has-error' : '' }}">
+<label for="brand">Brand</label>
+<select name="brand" id="brand" class="form-control">
+<option value="">Please select brand</option>
+{% for value in brands %}
+<option value="{{ value.id }}" {{ (old.brand ? old.brand : product.brand) == value.id  ? 'selected' : ''}}>{{ value.name }}</option>
+{% endfor %}
+</select>
+{% if errors.brand %}
+<span class="help-block">{{ errors.brand | first }}</span>
+{% endif %}
+</div>
+</div>
+</div>
+
+<div class="row">
+{% if errors.misc %}
+<span class="help-block">{{ errors.misc }}</span>
+{% endif %}
+<div class="col-xs-12 col-md-4">
+  <div class="form-group{{ errors.photo_0 ? ' has-error' : '' }}">
+    <label for="photo[]">Photo 1</label>
+    <input type="file" id="photo[]" name="photo[]">
+    {% if errors.photo_0 %}
+    <span class="help-block">{{ errors.photo_0 }}</span>
+    {% endif %}
+    <div><img class="first-slide" src="/assets/image/thumb_{{ product.photo_1 }}"></div>
+  </div>
+</div>
+<div class="col-xs-12 col-md-4">
+  <div class="form-group{{ errors.photo_1 ? ' has-error' : '' }}">
+    <label for="photo[]">Photo 2</label>
+    <input type="file" id="photo[]" name="photo[]">
+    {% if errors.photo_1 %}
+    <span class="help-block">{{ errors.photo_1 }}</span>
+    {% endif %}
+    <div><img class="first-slide" src="/assets/image/thumb_{{ product.photo_2 }}"></div>
+  </div>
+</div>
+<div class="col-xs-12 col-md-4">
+  <div class="form-group{{ errors.photo_2 ? ' has-error' : '' }}">
+    <label for="photo[]">Photo 3</label>
+    <input type="file" id="photo[]" name="photo[]">
+    {% if errors.photo_2 %}
+    <span class="help-block">{{ errors.photo_2 }}</span>
+    {% endif %}
+    <div><img class="first-slide" src="/assets/image/thumb_{{ product.photo_3 }}"></div>
+  </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-12">
+<div class="form-group{{ errors.detail ? ' has-error' : '' }}">
+<label for="detail">Detail</label>
+<textarea class="form-control" rows="3" name="detail" id="detail" placeholder="">{{ old.detail ? old.detail : product.detail }}</textarea>
+{% if errors.detail %}
+<span class="help-block">{{ errors.detail | first }}</span>
+{% endif %}
+</div>
+{{ csrf.field | raw }}
+<button type="submit" onClick="return confirm('Are you sure to update {{ value.name }} ?')"  class="btn btn-info">Update</button>
+</div>
+</div>
+
+</form>
+</div>
+{% endblock %}
