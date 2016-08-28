@@ -66,6 +66,8 @@ $container['view'] = function ($container) {
 
 	$view->getEnvironment()->addGlobal('_get',$_GET);
 
+	$view->getEnvironment()->addGlobal('breadcrumb',breadcrumb());
+
 	return $view;
 };
 
