@@ -32,11 +32,11 @@ class CsrfGuard extends Guard
 				}
 			}
 		}
-		else {
-			// Clear previous CSRF token(GET), prevent csrf from being harvested
-			if(isset($_SESSION['old_csrf']))
-				unset($_SESSION[$this->prefix][$_SESSION['old_csrf']]);
-		}
+		//else {
+			//// Clear previous CSRF token(GET), prevent csrf from being harvested
+			//if(isset($_SESSION['old_csrf']))
+				//unset($_SESSION[$this->prefix][$_SESSION['old_csrf']]);
+		//}
 
 		// Generate new CSRF token
 		$request = $this->generateNewToken($request);
