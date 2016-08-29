@@ -11,5 +11,5 @@
 * Import xxx.sql to your database
 * Create sessions folder in Slim-Ionic-Server installation folder
 * To run using php built-in webserver just, open terminal, cd into Slim-Ionic-Server installation folder and type 'php -S 127.0.0.1:2000 -t public' then press enter
-* If you want to change those address and port, also please edit file **/app/settings.php(at line::23)** by using your own preferences
+* If you want to change those address and port, please edit file **/app/settings.php(at line::23)** by using your own preferences
 * **Ionic app repo link, https://github.com/arma7x/Slim-Ionic-Store**
