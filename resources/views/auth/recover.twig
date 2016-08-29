@@ -9,14 +9,14 @@
 <input type="hidden" name="user" id="user" value="{{ token.user }}">
 <div class="form-group{{ errors.password ? ' has-error' : '' }}">
 <label for="password_old">New Password</label>
-<input type="password" name="password" id="password" class="form-control">
+<input type="password" name="password" id="password" placeholder="Please enter your new password" class="form-control">
 {% if errors.password %}
 <span class="help-block">{{ errors.password | first }}</span>
 {% endif %}
 </div>
 <div class="form-group{{ errors.confirm_password ? ' has-error' : '' }}">
 <label for="password">Confirm Password</label>
-<input type="password" name="confirm_password" id="confirm_password" class="form-control">
+<input type="password" name="confirm_password" id="confirm_password" placeholder="Please re-enter your new password" class="form-control">
 {% if errors.confirm_password %}
 <span class="help-block">{{ errors.confirm_password | first }}</span>
 {% endif %}

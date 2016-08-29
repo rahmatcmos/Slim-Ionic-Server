@@ -36,7 +36,7 @@
 <div class="form-group{{ errors.billing ? ' has-error' : '' }}">
     
 <label for="billing">Billing</label>
-<input type="text" name="billing" id="billing" class="form-control" value="{{ old.billing }}">
+<input type="text" name="billing" id="billing" class="form-control" placeholder="Please enter billing name" value="{{ old.billing }}">
 {% if errors.billing %}
 <span class="help-block">{{ errors.billing | first }}</span>
 {% endif %}
@@ -45,7 +45,7 @@
 <div class="col-xs-12 col-md-4">
 <div class="form-group{{ errors.mobile ? ' has-error' : '' }}">
 <label for="mobile">Mobile</label>
-<input type="text" name="mobile" id="mobile" class="form-control" value="{{ old.mobile }}">
+<input type="text" name="mobile" id="mobile" class="form-control" placeholder="+601xxxxxxxx" value="{{ old.mobile }}">
 {% if errors.mobile %}
 <span class="help-block">{{ errors.mobile | first }}</span>
 {% endif %}
@@ -54,7 +54,7 @@
 <div class="col-xs-12 col-md-4">
 <div class="form-group{{ errors.recipient ? ' has-error' : '' }}">
 <label for="recipient">Recipient</label>
-<input type="text" name="recipient" id="recipient" class="form-control" value="{{ old.recipient }}">
+<input type="text" name="recipient" id="recipient" class="form-control" placeholder="Please enter recipient name" value="{{ old.recipient }}">
 {% if errors.recipient %}
 <span class="help-block">{{ errors.recipient | first }}</span>
 {% endif %}
@@ -66,7 +66,7 @@
 <div class="col-xs-12">
 <div class="form-group{{ errors.first_address ? ' has-error' : '' }}">
 <label for="first_address">First Address</label>
-<input type="text" name="first_address" id="first_address" class="form-control" value="{{ old.first_address }}">
+<input type="text" name="first_address" id="first_address" class="form-control" placeholder="Please enter first address" value="{{ old.first_address }}">
 {% if errors.first_address %}
 <span class="help-block">{{ errors.first_address | first }}</span>
 {% endif %}
@@ -77,8 +77,8 @@
 <div class="row">
 <div class="col-xs-12">
 <div class="form-group{{ errors.second_address ? ' has-error' : '' }}">
-<label for="second_address">Second Address</label>
-<input type="text" name="second_address" id="second_address" class="form-control" value="{{ old.second_address }}">
+<label for="second_address">Second Address(optional)</label>
+<input type="text" name="second_address" id="second_address" class="form-control" placeholder="Please enter second address" value="{{ old.second_address }}">
 {% if errors.second_address %}
 <span class="help-block">{{ errors.second_address | first }}</span>
 {% endif %}
@@ -90,7 +90,7 @@
 <div class="col-xs-12 col-md-4">
 <div class="form-group{{ errors.poscode ? ' has-error' : '' }}">
 <label for="poscode">Poscode</label>
-<input type="text" name="poscode" id="poscode" class="form-control" value="{{ old.poscode }}">
+<input type="text" name="poscode" id="poscode" class="form-control" placeholder="Please enter poscode" value="{{ old.poscode }}">
 {% if errors.poscode %}
 <span class="help-block">{{ errors.poscode | first }}</span>
 {% endif %}

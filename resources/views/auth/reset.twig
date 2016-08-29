@@ -8,7 +8,7 @@
 <form action="{{ path_for('auth.reset') }}" method="post">
 <div class="form-group{{ errors.email ? ' has-error' : '' }}">
 <label for="email">Email</label>
-<input type="email" name="email" id="email" placeholder="you@domain.com" class="form-control" value="{{ old.email }}">
+<input type="email" name="email" id="email" placeholder="Please enter your email address" class="form-control" value="{{ old.email }}">
 {% if errors.email %}
 <span class="help-block">{{ errors.email | first }}</span>
 {% endif %}
