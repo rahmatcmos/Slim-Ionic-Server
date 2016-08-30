@@ -20,6 +20,7 @@ class CsrfViewMiddleware extends Middleware
 			',
 		]);
 		unset($_SESSION['old']);
+		$_SESSION['old'] = $request->getParams();
 
 		$response = $next($request,$response);
 		return $response;
