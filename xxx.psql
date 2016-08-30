@@ -1,0 +1,163 @@
+-- Converted by db_converter
+START TRANSACTION;
+SET standard_conforming_strings=off;
+SET escape_string_warning=off;
+SET CONSTRAINTS ALL DEFERRED;
+
+CREATE TABLE "brands" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "name" varchar(510) NOT NULL DEFAULT '',
+    "slug" varchar(510) NOT NULL DEFAULT '',
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+INSERT INTO "brands" VALUES ('2a6517c2-505f-4639-b688-0eccbcf66103','Brand A','Brand-A','2016-08-27 09:20:06','2016-08-27 09:20:06');
+CREATE TABLE "categories" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "name" varchar(510) NOT NULL DEFAULT '',
+    "slug" varchar(510) NOT NULL DEFAULT '',
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+INSERT INTO "categories" VALUES ('bcf287b5-007b-41cf-b699-ccf3acd33284','Category A','Category-A','2016-08-27 09:19:42','2016-08-27 09:19:42');
+CREATE TABLE "checkouts" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "user" varchar(510) NOT NULL DEFAULT '',
+    "invoice" varchar(510) DEFAULT 'UNKNOWN',
+    "product" varchar(510) NOT NULL DEFAULT '',
+    "amount" integer NOT NULL DEFAULT '1',
+    "discount" integer NOT NULL DEFAULT '0',
+    "price" float NOT NULL DEFAULT '0',
+    "colour" varchar(510) NOT NULL DEFAULT 'UNKNOWN',
+    "size" varchar(510) NOT NULL DEFAULT 'UNKNOWN',
+    "weight" float NOT NULL DEFAULT '0',
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE "invoices" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "user" varchar(510) NOT NULL,
+    "shipping" varchar(510) NOT NULL DEFAULT 'selfpickup',
+    "billplz" varchar(510) DEFAULT 'UNKNOWN',
+    "billing" varchar(510) NOT NULL DEFAULT '',
+    "mobile" varchar(510) DEFAULT '',
+    "total_amount" integer NOT NULL DEFAULT '0',
+    "total_price" float NOT NULL DEFAULT '0',
+    "total_weight" float NOT NULL DEFAULT '0',
+    "status" integer NOT NULL DEFAULT '0',
+    "collector" varchar(510) DEFAULT 'UNKNOWN',
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE "jwts" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "user" varchar(510) NOT NULL,
+    "ip_address" varchar(510) NOT NULL,
+    "audience" varchar(510) NOT NULL,
+    "os" varchar(510) NOT NULL,
+    "expired_at" timestamp NULL DEFAULT NULL,
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE "products" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "name" varchar(510) NOT NULL DEFAULT '',
+    "slug" varchar(510) NOT NULL DEFAULT '',
+    "detail" text NOT NULL,
+    "stock" integer NOT NULL DEFAULT '0',
+    "price" float NOT NULL DEFAULT '0',
+    "discount" integer NOT NULL DEFAULT '0',
+    "colour" varchar(510) NOT NULL DEFAULT 'UNKNOWN',
+    "size" varchar(510) NOT NULL DEFAULT 'UNKNOWN',
+    "weight" float NOT NULL DEFAULT '0',
+    "category" varchar(510) NOT NULL DEFAULT '',
+    "brand" varchar(510) NOT NULL DEFAULT '',
+    "photo_1" varchar(510) NOT NULL DEFAULT 'default.jpg',
+    "photo_2" varchar(510) NOT NULL DEFAULT 'default.jpg',
+    "photo_3" varchar(510) NOT NULL DEFAULT 'default.jpg',
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+INSERT INTO "products" VALUES ('e548d273-75d0-4769-ab33-d477f4d3d529','Product Lorem Ipsum 1','Product-Lorem-Ipsum-1-e548d273-75d0-4769-ab33-d477f4d3d529','<p>Lorem ipsum dolor sit amet, in facilisis mediocritatem cum, harum zril causae pro ei, dolor delicata usu id. Ei vim quot movet omittantur, vide commodo sed at. Sit choro luptatum reprehendunt id. Te eum mazim congue tation, rebum assentior expetendis id quo, eos decore noster at. His ei commodo sensibus. His eros senserit vituperatoribus ne. Prima porro aeterno quo ea, in oportere definitionem nam.</p>\r\n<p>An nam adhuc invidunt. Ei has eirmod mandamus rationibus. Odio ignota partiendo in vel, ne simul quaeque expetendis eam. Cum eu summo assentior argumentum, usu purto commodo aliquip id, at mea mentitum epicurei luptatum. Et usu esse graece minimum, ei cum ignota maiorum vituperatoribus, in viderer pertinax prodesset eos. Te impedit fabellas cum, decore labitur ne pri. Nec justo gubergren ei, has ceteros rationibus ut.</p>',120,150,0,'Blue','M',240,'bcf287b5-007b-41cf-b699-ccf3acd33284','2a6517c2-505f-4639-b688-0eccbcf66103','1472289709.jpg','default.jpg','default.jpg','2016-08-27 09:21:50','2016-08-27 09:21:50');
+CREATE TABLE "shippings" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "invoice" varchar(5110) NOT NULL DEFAULT '',
+    "recipient" varchar(510) NOT NULL DEFAULT '',
+    "first_address" varchar(510) NOT NULL DEFAULT '',
+    "second_address" varchar(510) DEFAULT '',
+    "poscode" integer NOT NULL DEFAULT '0',
+    "city" varchar(510) NOT NULL DEFAULT '',
+    "state" varchar(510) NOT NULL DEFAULT '',
+    "cost" float NOT NULL DEFAULT '0',
+    "serial" varchar(510) DEFAULT NULL,
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE "tokens" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "user" varchar(510) NOT NULL,
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+CREATE TABLE "users" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "name" varchar(510) NOT NULL DEFAULT '',
+    "email" varchar(510) NOT NULL DEFAULT '',
+    "password" varchar(510) NOT NULL DEFAULT '',
+    "role" varchar(510) NOT NULL DEFAULT 'MEMBER',
+    "status" varchar(510) NOT NULL DEFAULT 'ACTIVE',
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+INSERT INTO "users" VALUES ('2ce3b3b5-6011-4955-b9b2-db50c7c72647','arma7x','arma7x@live.com','$2y$10$4cA8xbR40jO.bhr7OuureuMH1xAPW.n6sLAdzhLGwmfiE0kJ/7muK','ADMIN','ACTIVE','2016-08-02 14:22:31','2016-08-22 08:03:13');
+CREATE TABLE "wishlists" (
+    "id" varchar(510) NOT NULL DEFAULT '',
+    "user" varchar(510) NOT NULL DEFAULT '',
+    "product" varchar(510) NOT NULL DEFAULT '',
+    "created_at" timestamp NULL DEFAULT NULL,
+    "updated_at" timestamp NULL DEFAULT NULL,
+    PRIMARY KEY ("id")
+);
+
+
+-- Post-data save --
+COMMIT;
+START TRANSACTION;
+
+-- Typecasts --
+
+-- Foreign keys --
+ALTER TABLE "checkouts" ADD CONSTRAINT "checkouts_ibfk_1" FOREIGN KEY ("user") REFERENCES "users" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX ON "checkouts" ("user");
+ALTER TABLE "invoices" ADD CONSTRAINT "invoices_ibfk_1" FOREIGN KEY ("user") REFERENCES "users" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX ON "invoices" ("user");
+ALTER TABLE "jwts" ADD CONSTRAINT "jwts_ibfk_1" FOREIGN KEY ("user") REFERENCES "users" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX ON "jwts" ("user");
+ALTER TABLE "tokens" ADD CONSTRAINT "tokens_ibfk_1" FOREIGN KEY ("user") REFERENCES "users" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX ON "tokens" ("user");
+ALTER TABLE "wishlists" ADD CONSTRAINT "wishlists_ibfk_1" FOREIGN KEY ("user") REFERENCES "users" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX ON "wishlists" ("user");
+
+-- Sequences --
+
+-- Full Text keys --
+
+COMMIT;

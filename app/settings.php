@@ -4,7 +4,6 @@ return [
 		'displayErrorDetails' => true,
 		'db' => [
 			'driver' => 'mysql',
-			'dsn' => 'mysql:host=localhost;dbname=xxx',
 			'host' => 'localhost',
 			'database' => 'xxx',
 			'username' => 'root',
