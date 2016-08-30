@@ -15,7 +15,7 @@
 <td>RM{{ value.price }}</td>
 <td>{{ value.colour }}</td>
 <td>{{ value.size }}</td>
-<td>{{ value.weight }}</td>
+<td>{{ value.weight }}g</td>
 <td>
 <form action="{{ path_for('checkout.delete') }}" method="post">
 <input type="hidden" name="id" id="id" value="{{ value.id }}">

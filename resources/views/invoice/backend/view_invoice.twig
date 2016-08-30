@@ -3,6 +3,7 @@
 <div class="content">
 <h1 class="text-center">{{ invoice.id }}</h1>
 <div class="row">
+<div class="col-xs-12"><p>STATUS :: [0-UNPAID] [1-PAID] [2-SHIP OUT] [3-COLLECTED] [4-RETURNED]</p></div>
 <div class="col-xs-12 col-md-4">
 <h4>{{ company_info.self_name }}</h4>
 <p>{{ company_info.self_address }}</p>
@@ -39,7 +40,6 @@
 <div class="row">
 <div class="col-xs-12">
 <h4 class="text-center">Shipping & Billing</h4>
-<p>STATUS :: [0-UNPAID] [1-PAID] [2-SHIP OUT] [3-COLLECTED]</p>
 {% if errors.serial %}
 <span class="text-danger">{{ errors.serial | first }}</span>
 {% endif %}
@@ -53,11 +53,15 @@
 <option value="1" {{ (old.status ? old.status : invoice.status) == 1  ? 'selected' : ''}}>PAID</option>
 <option value="2" {{ (old.status ? old.status : invoice.status) == 2  ? 'selected' : ''}}>SHIP OUT</option>
 <option value="3" {{ (old.status ? old.status : invoice.status) == 3  ? 'selected' : ''}}>COLLECTED</option>
+<option value="4" {{ (old.status ? old.status : invoice.status) == 4  ? 'selected' : ''}}>RETURNED</option>
 </select>
 </div>
 <div class="form-group{{ errors.serial ? ' has-error' : '' }}">
 <label for="serial">Serial</label>
 <input type="text" name="serial" id="serial" placeholder="Poslaju ID:2 / Collector IC:3" value="{{ old.serial }}" class="form-control">
+</div>
+<div class="checkbox">
+<label><input id="restore" type="checkbox" name="restore"> Restore Stock(For RETURNED only)</label>
 </div>
 {{ csrf.field | raw }}
 <button type="submit" onClick="return confirm('Are you sure to add to process ?')" class="btn btn-info">Process</button>

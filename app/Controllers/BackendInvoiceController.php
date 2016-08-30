@@ -134,6 +134,28 @@ class BackendInvoiceController extends Controller
 			Invoice::where('id',$request->getParam('id'))
 				->update(['status' => $request->getParam('status'), 'collector' => $request->getParam('serial')]);
 		}
+		elseif($request->getParam('status') == 4) //returned
+		{
+			if($request->getParam('restore'))
+			{
+				$cond = ['invoice' => $request->getParam('id')];
+				$productCheckouts = Checkout::select('amount','product')->where($cond)->get();
+
+				foreach($productCheckouts as $index => $productData)
+				{
+					$product = Product::find($productData->product);
+					$product->stock = (int) $product->stock + (int) $productData->amount;
+					$product->save();
+				}
+				$this->flash->addMessage('info','Invoice status is set to RETURNED::4 and product stock has been restored');
+			}
+			else
+			{
+				$this->flash->addMessage('info','Invoice status is set to RETURNED::4');
+			}
+
+			Invoice::where('id',$request->getParam('id'))->update(['status' => $request->getParam('status')]);
+		}
 
 		Invoice::where('id',$request->getParam('id'))->update(['status' => $request->getParam('status')]);
 		return $response->withRedirect($this->router->pathFor('dashboard.view.invoice').'?id='.$request->getParam('id'));
