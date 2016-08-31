@@ -9,7 +9,7 @@ class JwtController extends Controller
 	public function getJwt($request,$response)
 	{
 		$jwtList = Jwt::where('user', $_SESSION['user'])->get();
-		return $this->view->render($response,'jwt.twig',['jwts'=>$jwtList]);
+		return $this->view->render($response,'jwt.twig',['jwts'=>$jwtList,'pageTitle'=>'Manage JWT']);
 	}
 
 	public function deleteJwt($request,$response)

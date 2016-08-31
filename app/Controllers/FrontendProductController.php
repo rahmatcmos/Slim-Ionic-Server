@@ -29,7 +29,7 @@ class FrontendProductController extends Controller
 
 		$categoryList = Category::select('slug','name')->get();
 		$brandList = Brand::select('slug','name')->get();
-		$data = ['categories'=>$categoryList, 'brands'=>$brandList, 'products'=>$productList];
+		$data = ['categories'=>$categoryList, 'pageTitle'=>'Product', 'brands'=>$brandList, 'products'=>$productList];
 		return $this->view->render($response,'product/frontend/list_product.twig',$data);
 	}
 
@@ -134,7 +134,7 @@ class FrontendProductController extends Controller
 
 		$categoryList = Category::select('slug','name')->get();
 		$brandList = Brand::select('slug','name')->get();
-		$data = ['categories'=>$categoryList, 'brands'=>$brandList, 'products'=>$productList];
+		$data = ['categories'=>$categoryList, 'pageTitle'=>'Search Product', 'brands'=>$brandList, 'products'=>$productList];
 		return $this->view->render($response,'product/frontend/list_product.twig',$data);
 	}
 
@@ -151,6 +151,6 @@ class FrontendProductController extends Controller
 			return $response->withRedirect($this->router->pathFor('dashboard.manage.product'));
 		}
 
-		return $this->view->render($response,'product/frontend/view_product.twig', ['product'=>$productData]);
+		return $this->view->render($response,'product/frontend/view_product.twig', ['product'=>$productData,'pageTitle'=>$productData->name]);
 	}
 }

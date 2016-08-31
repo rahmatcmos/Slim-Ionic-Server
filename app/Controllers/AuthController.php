@@ -22,7 +22,7 @@ class AuthController extends Controller
 		});
 		$userList = User::select('id','name','email','role','status','created_at')->where('id','!=',$_SESSION['user'])->paginate(10);
 		$userList->setPath($this->settings['config']['base_url'].'/dashboard/member');
-		return $this->view->render($response,'auth/manage_user.twig',['users'=>$userList]);
+		return $this->view->render($response,'auth/manage_user.twig',['users'=>$userList,'pageTitle'=>'Manage User']);
 	}
 
 	public function deleteUser($request,$response)
@@ -59,7 +59,7 @@ class AuthController extends Controller
 
 	public function getSignIn($request,$response)
 	{
-		return $this->view->render($response,'auth/signin.twig');
+		return $this->view->render($response,'auth/signin.twig',['pageTitle'=>'Sign In']);
 	}
 
 	public function postSignIn($request,$response)
@@ -87,7 +87,7 @@ class AuthController extends Controller
 
 	public function getSignUp($request,$response)
 	{
-		return $this->view->render($response,'auth/signup.twig');
+		return $this->view->render($response,'auth/signup.twig',['pageTitle'=>'Sign Up']);
 	}
 
 	public function postSignUp($request,$response)
@@ -119,7 +119,7 @@ class AuthController extends Controller
 
 	public function getChangePassword($request,$response)
 	{
-		return $this->view->render($response,'auth/change.twig');
+		return $this->view->render($response,'auth/change.twig',['pageTitle'=>'Change Password']);
 	}
 
 	public function postChangePassword($request,$response)
@@ -143,7 +143,7 @@ class AuthController extends Controller
 
 	public function getResetPassword($request,$response)
 	{
-		return $this->view->render($response,'auth/reset.twig');
+		return $this->view->render($response,'auth/reset.twig',['pageTitle'=>'Reset Password']);
 	}
 
 	public function postResetPassword($request,$response)
@@ -202,7 +202,7 @@ class AuthController extends Controller
 			return $response->withRedirect($this->router->pathFor('home'));
 		}
 
-		return $this->view->render($response,'auth/recover.twig',['token'=>$token]);
+		return $this->view->render($response,'auth/recover.twig',['token'=>$token,'pageTitle'=>'Recover Account']);
 	}
 
 	public function postRecoverAccount($request,$response)

@@ -29,7 +29,7 @@ class BackendProductController extends Controller
 					->paginate(10);
 
 		$productList->setPath($this->settings['config']['base_url'].'/dashboard/product');
-		return $this->view->render($response,'product/backend/manage_product.twig',['products'=>$productList]);
+		return $this->view->render($response,'product/backend/manage_product.twig',['products'=>$productList,'pageTitle'=>'Manage Product']);
 	}
 
 	public function searchProduct($request,$response)
@@ -52,14 +52,14 @@ class BackendProductController extends Controller
 					->paginate(10);
 
 		$productList->setPath($this->settings['config']['base_url'].'/dashboard/product/search?keyword='.$currentKeyword);
-		return $this->view->render($response,'product/backend/manage_product.twig',['products'=>$productList]);
+		return $this->view->render($response,'product/backend/manage_product.twig',['products'=>$productList,'pageTitle'=>'Search Product']);
 	}
 
 	public function getAddProduct($request,$response)
 	{
 		$categoryList = Category::select('id','name')->get();
 		$brandList = Brand::select('id','name')->get();
-		$data = ['categories'=>$categoryList, 'brands'=>$brandList];
+		$data = ['categories'=>$categoryList, 'brands'=>$brandList,'pageTitle'=>'Add Product'];
 		return $this->view->render($response,'product/backend/add_product.twig', $data);
 	}
 
@@ -146,7 +146,7 @@ class BackendProductController extends Controller
 
 		$categoryList = Category::select('id','name')->get();
 		$brandList = Brand::select('id','name')->get();
-		$data = ['categories'=>$categoryList, 'brands'=>$brandList, 'product'=>$productData];
+		$data = ['categories'=>$categoryList, 'pageTitle'=>$productData->name, 'brands'=>$brandList, 'product'=>$productData];
 		return $this->view->render($response,'product/backend/update_product.twig', $data);
 	}
 

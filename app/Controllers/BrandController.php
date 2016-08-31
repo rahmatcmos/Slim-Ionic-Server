@@ -19,7 +19,7 @@ class BrandController extends Controller
 		});
 		$brandList = Brand::select()->paginate(10);
 		$brandList->setPath($this->settings['config']['base_url'].'/dashboard/brand');
-		return $this->view->render($response,'brand/manage_brand.twig',['brands'=>$brandList]);
+		return $this->view->render($response,'brand/manage_brand.twig',['brands'=>$brandList,'pageTitle'=>'Manage Brand']);
 	}
 
 	public function addBrand($request,$response)

@@ -22,7 +22,7 @@ class BackendInvoiceController extends Controller
 
 		$invoiceList = Invoice::select('id','total_amount','shipping','total_price','total_weight','status','created_at')->orderBy('created_at', 'desc')->paginate(10);
 		$invoiceList->setPath($this->settings['config']['base_url'].'/dashboard/invoice');
-		return $this->view->render($response,'invoice/backend/invoice.twig',['invoices'=>$invoiceList]);
+		return $this->view->render($response,'invoice/backend/invoice.twig',['invoices'=>$invoiceList,'pageTitle'=>'Manage Invoice']);
 	}
 
 	public function searchInvoice($request,$response)
@@ -42,14 +42,14 @@ class BackendInvoiceController extends Controller
 					->paginate(10);
 
 		$invoiceList->setPath($this->settings['config']['base_url'].'/dashboard/invoice/search?keyword='.$currentKeyword);
-		return $this->view->render($response,'invoice/backend/invoice.twig',['invoices'=>$invoiceList]);
+		return $this->view->render($response,'invoice/backend/invoice.twig',['invoices'=>$invoiceList,'pageTitle'=>'Search Invoice']);
 	}
 
 	public function viewInvoice($request,$response)
 	{
 		$cond = ['id' => $request->getParam('id')];
 		$invoice = Invoice::select('id','user','billing','mobile','total_amount','total_price','total_weight','status','collector','created_at')->where($cond)->first();
-		$data = ['invoice'=>$invoice, 'shipping_record'=>$invoice->shippingRecord, 'checkout_products'=>$invoice->checkoutProducts];
+		$data = ['invoice'=>$invoice, 'pageTitle'=>'Invoice - '.$invoice->id, 'shipping_record'=>$invoice->shippingRecord, 'checkout_products'=>$invoice->checkoutProducts];
 		return $this->view->render($response,'invoice/backend/view_invoice.twig', $data);
 	}
 

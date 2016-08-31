@@ -19,7 +19,7 @@ class CategoryController extends Controller
 		});
 		$categoryList = Category::select()->paginate(10);
 		$categoryList->setPath($this->settings['config']['base_url'].'/dashboard/category');
-		return $this->view->render($response,'category/manage_category.twig',['categories'=>$categoryList]);
+		return $this->view->render($response,'category/manage_category.twig',['categories'=>$categoryList,'pageTitle'=>'Manage Category']);
 	}
 
 	public function addCategory($request,$response)

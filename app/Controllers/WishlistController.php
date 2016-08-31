@@ -15,7 +15,7 @@ class WishlistController extends Controller
 					  ->join('products', 'wishlists.product', '=', 'products.id')
 					  ->get();
 
-		return $this->view->render($response,'wishlist/wishlist.twig',['wishlists'=>$wishlistList]);
+		return $this->view->render($response,'wishlist/wishlist.twig',['wishlists'=>$wishlistList,'pageTitle'=>'Wishlist']);
 	}
 
 	public function deleteWishlist($request,$response)

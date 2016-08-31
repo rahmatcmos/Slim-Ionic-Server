@@ -18,7 +18,7 @@ class CheckoutController extends Controller
 					  ->join('products', 'checkouts.product', '=', 'products.id')
 					  ->get();
 
-		return $this->view->render($response,'checkout/checkout.twig',['checkouts'=>$checkoutList]);
+		return $this->view->render($response,'checkout/checkout.twig',['checkouts'=>$checkoutList,'pageTitle'=>'Checkout']);
 	}
 
 	public function deleteCheckout($request,$response)

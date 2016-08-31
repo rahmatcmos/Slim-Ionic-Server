@@ -25,7 +25,7 @@ class FrontendInvoiceController extends Controller
 					->orderBy('created_at', 'desc')
 					->paginate(10);
 		$invoiceList->setPath($this->settings['config']['base_url'].'/invoice');
-		return $this->view->render($response,'invoice/frontend/invoice.twig',['invoices'=>$invoiceList]);
+		return $this->view->render($response,'invoice/frontend/invoice.twig',['invoices'=>$invoiceList,'pageTitle'=>'Invoice']);
 	}
 
 	public function viewInvoice($request,$response)
@@ -39,7 +39,7 @@ class FrontendInvoiceController extends Controller
 			return $response->withRedirect($this->router->pathFor('frontend.invoice.index'));
 		}
 
-		$data = ['invoice'=>$invoice, 'shipping_record'=>$invoice->shippingRecord, 'checkout_products'=>$invoice->checkoutProducts];
+		$data = ['invoice'=>$invoice, 'pageTitle'=>'Invoice - '.$invoice->id, 'shipping_record'=>$invoice->shippingRecord, 'checkout_products'=>$invoice->checkoutProducts];
 		return $this->view->render($response,'invoice/frontend/view_invoice.twig', $data);
 	}
 
