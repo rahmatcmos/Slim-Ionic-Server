@@ -164,7 +164,7 @@ class AuthController extends Controller
 		}
 
 		$title = 'Recovery Token';
-		$body = '<b>This is your recovery token::</b> expired 3 hour after '.$token->created_at."\r\n".$this->settings['config']['base_url'].'/auth/recover?token='.$token->id;
+		$body = $this->view->render($response,'emailsTemplates/forgot_password.twig', ['user'=>$user, 'token'=>$token])->getBody();
 		$altBody = 'This is your recovery token:: expired 3 hour after '.$token->created_at."\r\n".$this->settings['config']['base_url'].'/auth/recover?token='.$token->id;
 		$mailer = new Mailer($this->settings);
 		$result = $mailer->addRecipient($user)->addMessage($title, $body, $altBody, true)->init();

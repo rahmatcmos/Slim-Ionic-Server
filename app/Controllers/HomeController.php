@@ -8,6 +8,6 @@ class HomeController extends Controller
 {
 	public function index($request,$response)
 	{
-		return $this->view->render($response,'home.twig',['info'=>$this->settings['shipping']]);
+		return $this->view->render($response,'home.twig');
 	}
 }
