@@ -4,7 +4,7 @@
 * Simple features like add product/brand/category, wishlist, checkout, invoice/shipping(poslaju)
 
 ##### Instruction(run locally only)
-* **This build only for Malaysia usage**
+* **This built only for Malaysia usage**
 * Default admin login credentials arma7x@live.com 111111111
 * Run composer install to download all dependencies
 * Set your own configuration in file /app/settings.php
