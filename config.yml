@@ -1,0 +1,3 @@
+migration: '000'
+seed: {  }
+status: up

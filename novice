@@ -1,0 +1,376 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+require __DIR__. '/bootstrap/novice_bootstrap.php';
+
+use Symfony\Component\Yaml\Yaml;
+
+/**
+ * Script for creating, destroying, and seeding the app's database
+ */
+class Novice {
+
+    protected $filesError = '';
+    protected $migrationFilesArray = [];
+    protected $seedFilesArray = [];
+    //var_dump($settings['settings']['db']);
+
+    function __construct($args)
+    {
+        $this->args = $args;
+    }
+
+    function help()
+    {
+        echo "\033[1;34m\n";
+        echo "syntaxis: php novice <command> [<args>]".PHP_EOL;
+        echo PHP_EOL;
+
+        echo "Commands: \n";
+        echo "php novice --help                           -->   Displays the help menu.".PHP_EOL;
+        echo "php novice migrate commit                   -->   Migrate the database.".PHP_EOL;
+        echo "php novice migrate list                     -->   List all migration files.".PHP_EOL;
+        echo "php novice migrate rollback                 -->   Rollback last migrated file.".PHP_EOL;
+        echo "php novice migrate rollback num             -->   Rollback last 'num' migrated files.".PHP_EOL;
+        echo "php novice seed run                         -->   Seed all files into database.".PHP_EOL;
+        echo "php novice seed list                        -->   List all seed files.".PHP_EOL;
+        echo "php novice seed remove name                 -->   Remove 'name' from seeded files history.".PHP_EOL;
+        echo "php novice site up                          -->   Put site up.".PHP_EOL;
+        echo "php novice site down                        -->   Put site down.".PHP_EOL;
+        echo "php novice site status                      -->   Get site status. \033[0m".PHP_EOL;
+        echo PHP_EOL;
+    }
+
+    function exec()
+    {
+        if (count($this->args) <= 1) {
+            $this->help();
+        } else {
+            switch ($this->args[1]) {
+                case "migrate":
+                    if (isset($this->args[2]) && $this->args[2] == 'list') {
+                        $this->_listMigrationFiles();
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'commit') {
+                        $this->_runMigration();
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'rollback' && isset($this->args[3])) {
+                        $this->_rollbackMigration($this->args[3]);
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'rollback') {
+                        $this->_rollbackMigration();
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'reset') {
+                        $this->_rollbackMigration($this->args[2]);
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'refresh') {
+                        $this->_rollbackMigration($this->args[2]);
+                        break;
+                    }
+                case "site":
+                    if (isset($this->args[2]) && $this->args[2] == 'up') {
+                        $this->_setSiteStatus('up');
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'down') {
+                        $this->_setSiteStatus('down');
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'status') {
+                        $this->_getSiteStatus();
+                        break;
+                    }
+                case "seed":
+                    if (isset($this->args[2]) && $this->args[2] == 'list') {
+                        $this->_listSeedFiles();
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'run') {
+                        $this->_runSeed();
+                        break;
+                    }
+                    elseif (isset($this->args[2]) && $this->args[2] == 'remove' && isset($this->args[3])) {
+                        $this->_removeSeed($this->args[3]);
+                        break;
+                    }
+                case "--help":
+                    $this->help();
+                    break;
+                default:
+                    $this->help();
+            }
+        }
+    }
+
+    private function _listMigrationFiles()
+    {
+        $this->_getMigrationFiles();
+        $config = $this->_getConfigValues();
+        $current = $config['migration'];
+        if($this->filesError  == '') {
+             foreach($this->migrationFilesArray as $index => $data) {
+                 if($index == $current) {
+                     echo "\033[1;32m".$data['version'].'_'.$data['class']."(current)\033[0m".PHP_EOL;
+                 }
+                 else {
+                     echo "\033[1;34m".$data['version'].'_'.$data['class']."\033[0m".PHP_EOL;
+                 }
+             }
+        }
+        else {
+            echo "\033[1;31m".$this->filesError."\033[0m".PHP_EOL;
+        }
+    }
+
+    private function _runMigration()
+    {
+        $counter = 0;
+        $this->_getMigrationFiles();
+        $config = $this->_getConfigValues();
+        $current = $config['migration'];
+        $migrateTo = $current;
+        if($this->filesError  == '') {
+            foreach($this->migrationFilesArray as $index => $data) {
+                 if($index > $current) {
+                    $this->_executeFile($data);
+                    echo "\033[1;32mMigrating ".$data['version'].'_'.$data['class']." \033[0m".PHP_EOL;
+                    $counter++;
+                    $migrateTo = $data['version'];
+                 }
+            }
+            if($counter > 0) {
+                echo "\033[1;32mCommit Finish, Total Files:".$counter ." \033[0m".PHP_EOL;
+                $config['migration'] = $migrateTo;
+                $this->_setConfigValues($config);
+            }
+            else
+                echo "\033[1;32mNothing to migrate \033[0m".PHP_EOL;
+        }
+        else {
+            echo "\033[1;31m".$this->filesError."\033[0m".PHP_EOL;
+        }
+    }
+
+    private function _rollbackMigration($stepdown = 0)
+    {
+        $this->_getMigrationFiles();
+        $config = $this->_getConfigValues();
+        $current = $config['migration'];
+        $migrateTo = $current;
+        $counter = 0;
+        if($this->filesError  == '') {
+            if(is_numeric($stepdown) && ((int) $stepdown > 0)) {
+                if($stepdown <= count($this->migrationFilesArray)) {
+                    for($i=0;$i<$stepdown;$i++) {
+                        $this->_executeFile($this->migrationFilesArray[$migrateTo]);
+                        echo "\033[1;32mRollback ".$this->migrationFilesArray[$migrateTo]['version'].'_'.$this->migrationFilesArray[$migrateTo]['class']." \033[0m".PHP_EOL;
+                        $migrateTo = (int) $this->migrationFilesArray[$migrateTo]['version'] - 1;
+                        $counter++;
+                    }
+                    echo "\033[1;32mRollback Finish, Total Files:".$counter ." \033[0m".PHP_EOL;
+                    $config['migration'] = (string) '00'.$migrateTo;
+                    $this->_setConfigValues($config);
+                }
+                else
+                    echo "\033[1;32mToo many files to rollback \033[0m".PHP_EOL;
+            }
+            elseif($stepdown == 'reset')
+            {
+                if(is_numeric($migrateTo) && ((int) $migrateTo > 0))
+                {
+                    for($i=0;$i<count($this->migrationFilesArray);$i++) {
+                        $this->_executeFile($this->migrationFilesArray[$migrateTo]);
+                        echo "\033[1;32mRollback ".$this->migrationFilesArray[$migrateTo]['version'].'_'.$this->migrationFilesArray[$migrateTo]['class']." \033[0m".PHP_EOL;
+                        $migrateTo = (int) $this->migrationFilesArray[$migrateTo]['version'] - 1;
+                        $counter++;
+                    }
+                    echo "\033[1;32mRollback Reset Finish, Total Files:".$counter ." \033[0m".PHP_EOL;
+                    $config['migration'] = (string) '00'.$migrateTo;
+                    $this->_setConfigValues($config);
+                }
+                else
+                    echo "\033[1;32mNothing to migrate \033[0m".PHP_EOL;
+            }
+            elseif($stepdown == 'refresh')
+            {
+                if(is_numeric($migrateTo) && ((int) $migrateTo > 0))
+                {
+                    for($i=0;$i<count($this->migrationFilesArray);$i++) {
+                        $this->_executeFile($this->migrationFilesArray[$migrateTo]);
+                        echo "\033[1;32mRollback ".$this->migrationFilesArray[$migrateTo]['version'].'_'.$this->migrationFilesArray[$migrateTo]['class']." \033[0m".PHP_EOL;
+                        $migrateTo = (int) $this->migrationFilesArray[$migrateTo]['version'] - 1;
+                        $counter++;
+                    }
+                    echo "\033[1;32mRollback Refresh Finish, Total Files:".$counter ." \033[0m".PHP_EOL;
+                    $config['migration'] = (string) '00'.$migrateTo;
+                    $this->_setConfigValues($config);
+                    echo "\033[1;34mMigrate Commit \033[0m".PHP_EOL;
+                    $this->_runMigration();
+                }
+                else
+                    echo "\033[1;32mNothing to migrate \033[0m".PHP_EOL;
+            }
+            elseif(isset($this->migrationFilesArray[$current]) && is_numeric($stepdown) && ((int) $stepdown == 0)) {
+                $this->_executeFile($this->migrationFilesArray[$current]);
+                echo "\033[1;32mRollback ".$this->migrationFilesArray[$current]['version'].'_'.$this->migrationFilesArray[$current]['class']." \033[0m".PHP_EOL;
+                echo "\033[1;32mProcess Finish \033[0m".PHP_EOL;
+                $migrateTo = (int) $this->migrationFilesArray[$current]['version'] - 1;
+                $config['migration'] = (string) '00'.$migrateTo;
+                $this->_setConfigValues($config);
+            }
+            else
+                echo "\033[1;32mNothing to migrate \033[0m".PHP_EOL;
+        }
+        else {
+            echo "\033[1;31m".$this->filesError."\033[0m".PHP_EOL;
+        }
+    }
+
+    private function _getMigrationFiles()
+    {
+        $counter = 0;
+        $files = glob(MIGRATIONS_PATH.'/*_*.php');
+        foreach($files as $index => $file) {
+            $name = basename($file, '.php');
+            $split = explode('_',$name);
+            if(count($split) == 2) {
+                $version = $split[0];
+                $gap = $version - $counter;
+                if(is_numeric($version) && ($version !== 0) && ($gap == 1) && (strlen($split[0]) > 2)) {
+                    $counter++;
+                    if(strlen($split[1]) > 0) {
+                        $this->migrationFilesArray[$version] = ['path'=>$file,'version'=>$split[0],'class'=>$split[1]];
+                    }
+                    else {
+                        $this->filesError = $file.' incorrect class name';
+                        break;
+                    }
+                }
+                else {
+                    $this->filesError = $file.' incorrect version number';
+                    break;
+                }
+            }
+            else {
+                $this->filesError = $file.' incorrect name format';
+                break;
+            }
+        }
+    }
+
+    private function _executeFile($file)
+    {
+        require_once($file['path']);
+        $class = $file['class'];
+        $obj = new $class;
+        $obj->up();
+    }
+
+    private function _runSeed()
+    {
+        $counter = 0;
+        $this->_getSeedFiles();
+        $config = $this->_getConfigValues();
+        $seedList = $config['seed'];
+        foreach($this->seedFilesArray as $index => $data) {
+            if(!in_array($index, $seedList)) {
+                require_once($data['path']);
+                $class = $data['class'];
+                $obj = new $class;
+                $obj->run();
+                echo "\033[1;32mSeeding ".$data['class']." \033[0m".PHP_EOL;
+                $seedList[] = $data['class'];
+                $counter++;
+            }
+        }
+        if($counter > 0) {
+            echo "\033[1;32mProcess Finish, Total Files:".$counter ." \033[0m".PHP_EOL;
+            $config['seed'] = $seedList;
+            $this->_setConfigValues($config);
+        }
+        else
+            echo "\033[1;32mNothing to seed \033[0m".PHP_EOL;
+    }
+
+    private function _removeSeed($name = '')
+    {
+        $counter = 0;
+        $this->_getSeedFiles();
+        $config = $this->_getConfigValues();
+        $seedList = $config['seed'];
+        if(in_array($name, $seedList) && ($name != '')) {
+            $key = array_search($name,$seedList);
+            UNSET($seedList[$key]);
+            $config['seed'] = $seedList;
+            $this->_setConfigValues($config);
+            echo "\033[1;32m".$name." was removed from seed history \033[0m".PHP_EOL;
+        }
+        else
+            echo "\033[1;32mNothing to remove from seed history \033[0m".PHP_EOL;
+    }
+
+    private function _listSeedFiles()
+    {
+        $this->_getSeedFiles();
+        $config = $this->_getConfigValues();
+        $seedList = $config['seed'];
+        foreach($this->seedFilesArray as $index => $data) {
+            if(in_array($index, $seedList)) {
+                echo "\033[1;32m".$data['class']."(seeded)\033[0m".PHP_EOL;
+            }
+            else {
+                echo "\033[1;34m".$data['class']."\033[0m".PHP_EOL;
+            }
+        }
+    }
+
+    private function _getSeedFiles()
+    {
+        $counter = 0;
+        $files = glob(SEEDS_PATH.'/*.php');
+        foreach($files as $index => $file) {
+            $name = basename($file, '.php');
+            $this->seedFilesArray[$name] = ['path'=>$file,'class'=>$name];
+        }
+    }
+
+    private function _getSiteStatus()
+    {
+        $config = $this->_getConfigValues();
+        if($config['status'] == 'down')
+            echo "\033[1;31mSite is ".$config['status']."\033[0m".PHP_EOL;
+        else
+            echo "\033[1;32mSite is ".$config['status']."\033[0m".PHP_EOL;
+    }
+
+    private function _setSiteStatus($status)
+    {
+        $config = $this->_getConfigValues();
+        $config['status'] = $status;
+        $this->_setConfigValues($config);
+        if($status == 'down')
+            echo "\033[1;31mSite is set to down\033[0m".PHP_EOL;
+        else
+            echo "\033[1;32mSite is set to up\033[0m".PHP_EOL;
+    }
+
+    private function _getConfigValues()
+    {
+        return Yaml::parse(file_get_contents(realpath(__DIR__).'/config.yml'));
+    }
+
+    private function _setConfigValues($array)
+    {
+        $yaml = Yaml::dump($array);
+        file_put_contents(realpath(__DIR__).'/config.yml', $yaml);
+    }
+}
+
+$novice = new Novice($argv);
+$novice->exec();

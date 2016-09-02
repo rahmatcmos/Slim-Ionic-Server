@@ -2,6 +2,7 @@
 return [
 	'settings' => [
 		'displayErrorDetails' => true,
+		'https_mode' => false,
 		'db' => [
 			'driver' => 'mysql',
 			'host' => 'localhost',
