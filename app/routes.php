@@ -1,6 +1,7 @@
 <?php
 
 use App\Middleware\AdminMiddleware;
+use App\Middleware\AdminxStaffMiddleware;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\GuestMiddleware;
 use App\Middleware\AjaxMiddleware;
@@ -105,6 +106,18 @@ $app->group('',function () {
 	$this->post('/invoice/generate','FrontendInvoiceController:generateInvoice')->setName('frontend.invoice.generate');
 	$this->post('/invoice/delete','FrontendInvoiceController:deleteInvoice')->setName('frontend.invoice.delete');
 })->add(new AuthMiddleware($container));
+/*-----------------------------------------------------------*/
+
+/**
+* Admin route path for frontend
+* Access limited to ADMIN only
+*/
+$app->group('',function () {
+
+	$this->get('/dashboard/member','AuthController:getUser')->setName('dashboard.manage.user');
+	$this->post('/dashboard/member/delete','AuthController:deleteUser')->setName('dashboard.delete.user');
+	$this->post('/dashboard/member/update','AuthController:updateUser')->setName('dashboard.update.user');
+})->add(new AdminMiddleware($container));
 
 /*-----------------------------------------------------------*/
 
@@ -113,9 +126,6 @@ $app->group('',function () {
 * Access limited to ADMIN only
 */
 $app->group('/dashboard',function () {
-	$this->get('/member','AuthController:getUser')->setName('dashboard.manage.user');
-	$this->post('/member/delete','AuthController:deleteUser')->setName('dashboard.delete.user');
-	$this->post('/member/update','AuthController:updateUser')->setName('dashboard.update.user');
 
 	$this->get('/category','CategoryController:getCategory')->setName('dashboard.manage.category');
 	$this->post('/category/add','CategoryController:addCategory')->setName('dashboard.add.category');
@@ -140,6 +150,7 @@ $app->group('/dashboard',function () {
 	$this->get('/invoice/view','BackendInvoiceController:viewInvoice')->setName('dashboard.view.invoice');
 	$this->post('/invoice/delete','BackendInvoiceController:deleteInvoice')->setName('dashboard.delete.invoice');
 	$this->post('/invoice/update','BackendInvoiceController:updateInvoice')->setName('dashboard.update.invoice');
-})->add(new AdminMiddleware($container));
+})->add(new AdminxStaffMiddleware($container));
+
 
 /*-----------------------------------------------------------*/
