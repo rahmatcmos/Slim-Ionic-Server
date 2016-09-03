@@ -67,6 +67,10 @@ class Novice {
                         $this->_rollbackMigration();
                         break;
                     }
+                    else {
+                        $this->help();
+                        break;
+                    }
                 case "site":
                     if (isset($this->args[2]) && $this->args[2] === 'up') {
                         $this->_setSiteStatus('up');
@@ -80,6 +84,10 @@ class Novice {
                         $this->_getSiteStatus();
                         break;
                     }
+                    else {
+                        $this->help();
+                        break;
+                    }
                 case "seed":
                     if (isset($this->args[2]) && $this->args[2] === 'list') {
                         $this->_listSeedFiles();
@@ -91,6 +99,10 @@ class Novice {
                     }
                     elseif (isset($this->args[2]) && $this->args[2] === 'remove' && isset($this->args[3])) {
                         $this->_removeSeed($this->args[3]);
+                        break;
+                    }
+                    else {
+                        $this->help();
                         break;
                     }
                 case "--help":
