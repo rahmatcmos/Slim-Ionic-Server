@@ -23,7 +23,7 @@
         "zguillez/slim-mobile-detect": "^1.0",
         "nesbot/carbon": "^1.21",
         "tuupola/cors-middleware": "^0.5.1",
-        "illuminate/pagination": "^5.2",
+        "illuminate/pagination": "5.2",
         "monolog/monolog": "^1.21",
         "phpmailer/phpmailer": "^5.2",
         "gregwar/image": "^2.0",
